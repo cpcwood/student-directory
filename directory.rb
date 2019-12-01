@@ -13,11 +13,22 @@ students = [
   "Norman Bates"
 ]
 
-# Print out list of students
-puts "The students of Villains Academy"
-puts "-------------"
-puts students
-puts "-------------"
+# Create print defintions
+def print_header
+  puts "The students of Villains Academy"
+  puts "-------------"
+end
 
-# Finally, we print the total number of students
-puts "Overall, we have #{students.count} great students"
+def print_names(names)
+  puts names
+  puts "-------------"
+end
+
+def print_footer(names)
+  puts "Overall, we have #{names.count} great students"
+end
+
+# Run program
+print_header
+print_names(students)
+print_footer(students)
