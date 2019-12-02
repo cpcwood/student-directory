@@ -38,7 +38,10 @@ def print_names(students)
 end
 
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students"
+  print "Overall, we have #{students.count} great student"
+  if students.count > 1
+    print "s\n"
+  end
 end
 
 # Run program
