@@ -29,12 +29,14 @@ def print_header
 end
 
 def print_names(students)
-  i = 0
-  while i < students.length
-    puts "#{i + 1}. #{(students[i][:name]).center(16)} Age: #{(students[i][:age]).center(4)} (#{students[i][:cohort]} cohort)"
-    i += 1
+  if students.length > 0
+    i = 0
+    while i < students.length
+      puts "#{i + 1}. #{(students[i][:name]).center(16)} Age: #{(students[i][:age]).center(4)} (#{students[i][:cohort]} cohort)"
+      i += 1
+    end
+    puts "-------------"
   end
-  puts "-------------"
 end
 
 def print_footer(students)
