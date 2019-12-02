@@ -2,7 +2,6 @@
 def input_students
   puts "Please enter the names and ages and cohorts of the students"
   puts "To finish, just hit return twice"
-  students = []
   pos_cohort = [['January', 1], ['Febuary', 2], ['March', 3], ['April', 4], ['May', 5], ['June', 6], ['July', 7], ['August', 8], ['September', 9], ['October', 10], ['November', 11], ['December', 12]]
 
   while true
@@ -25,14 +24,14 @@ def input_students
       # Merge defaults and ouput number of student
       student = {name: name, age: age, cohort: cohort}
       default = {age: '--', cohort: 'December'}
-      students << default.merge(student) {|key, default, student| student.empty? ? default : student}
-      puts "Now we have #{students.count} students"
+      $students << default.merge(student) {|key, default, student| student.empty? ? default : student}
+      puts "Now we have #{$students.count} students"
     else
       break
     end
   end
-  # Sort by cohort and return
-  return students.sort{|a, b| pos_cohort.find{|s| /#{a[:cohort]}/ =~ s[0]}[1] <=> pos_cohort.find{|s| /#{b[:cohort]}/ =~ s[0]}[1]}
+  # Sort by cohort
+  $students = $students.sort{|a, b| pos_cohort.find{|s| /#{a[:cohort]}/ =~ s[0]}[1] <=> pos_cohort.find{|s| /#{b[:cohort]}/ =~ s[0]}[1]}
 end
 
 # Create print defintions
@@ -44,7 +43,7 @@ end
 def print_names(students)
   if students.length > 0
     students.each_with_index {|student, index|
-      puts "#{index}. #{(student[:name]).center(16)} Age: #{(student[:age]).center(2)} (#{student[:cohort]} cohort)"
+      puts "#{index + 1}. #{(student[:name]).ljust(16)} Age: #{(student[:age]).ljust(2)} (#{student[:cohort]} cohort)"
     }
     puts "-------------"
   end
@@ -57,8 +56,43 @@ def print_footer(students)
   end
 end
 
-# Run program
-students = input_students
-print_header
-print_names(students)
-print_footer(students)
+# Define interactive menu
+
+def print_menu
+  # Ask user what to do
+  puts "Please select option from the following list"
+  puts "1 -> Input the students"
+  puts "2 -> Show the students"
+  puts "9 -> Exit"
+end
+
+def show_students
+  print_header
+  print_names($students)
+  print_footer($students)
+end
+
+def process_selection(selection)
+  # Print menu and check input
+  case (selection)
+  when "1"
+    $students = input_students
+  when "2"
+    show_students
+  when "9"
+    exit
+  else
+    puts "I don't know what you meant, try again"
+  end
+end
+
+def interactive_menu
+  $students = []
+  loop do
+    print_menu
+    process_selection(gets.chomp)
+  end
+end
+
+# Run progam
+interactive_menu
