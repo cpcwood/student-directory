@@ -85,14 +85,27 @@ def save_students
   puts "\nStudent directory saved to \"students.csv\"\n\n"
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
   name, age, cohort = line.chomp.split(',')
     $students << {name: name, cohort: cohort, age: age}
   end
   file.close
   puts "\nStudent directory loaded from\"students.csv\"\n\n"
+end
+
+def try_load_students
+  filename = ARGV.first
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{$students.count} from #{filename}\n"
+    return
+  else
+    puts "Sorry, #{filename} doesn't exist, no students loaded\n"
+    return
+  end
 end
 
 def process_selection(selection)
@@ -109,16 +122,17 @@ def process_selection(selection)
   when "9"
     exit
   else
-    puts "I don't know what you meant, try again"
+    puts "I don't know what you mean't, try again"
   end
 end
 
 # Create interactive menu
 def interactive_menu
   $students = []
+  try_load_students
   loop do
     print_menu
-    process_selection(gets.chomp)
+    process_selection(STDIN.gets.strip)
   end
 end
 
