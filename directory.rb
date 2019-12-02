@@ -52,8 +52,9 @@ end
 def print_footer
   print "Overall, we have #{$students.count} great student"
   if $students.count > 1
-    print "s\n"
+    print "s"
   end
+  print "\n\n"
 end
 
 # Define interactive menu components
@@ -63,6 +64,7 @@ def print_menu
   puts "1 -> Input the students"
   puts "2 -> Show the students"
   puts "3 -> Save students directory"
+  puts "4 -> Load student directory from exisiting file"
   puts "9 -> Exit"
 end
 
@@ -80,7 +82,17 @@ def save_students
     file.puts csv_line
   end
   file.close
-  puts "\nStudent directory saved to \"students.csv\"\n"
+  puts "\nStudent directory saved to \"students.csv\"\n\n"
+end
+
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+  name, age, cohort = line.chomp.split(',')
+    $students << {name: name, cohort: cohort, age: age}
+  end
+  file.close
+  puts "\nStudent directory loaded from\"students.csv\"\n\n"
 end
 
 def process_selection(selection)
@@ -92,6 +104,8 @@ def process_selection(selection)
     show_students
   when "3"
     save_students
+  when "4"
+    load_students
   when "9"
     exit
   else
