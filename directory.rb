@@ -40,36 +40,47 @@ def print_header
   puts "-------------"
 end
 
-def print_names(students)
-  if students.length > 0
-    students.each_with_index {|student, index|
+def print_names
+  if $students.length > 0
+    $students.each_with_index {|student, index|
       puts "#{index + 1}. #{(student[:name]).ljust(16)} Age: #{(student[:age]).ljust(2)} (#{student[:cohort]} cohort)"
     }
     puts "-------------"
   end
 end
 
-def print_footer(students)
-  print "Overall, we have #{students.count} great student"
-  if students.count > 1
+def print_footer
+  print "Overall, we have #{$students.count} great student"
+  if $students.count > 1
     print "s\n"
   end
 end
 
-# Define interactive menu
-
+# Define interactive menu components
 def print_menu
   # Ask user what to do
   puts "Please select option from the following list"
   puts "1 -> Input the students"
   puts "2 -> Show the students"
+  puts "3 -> Save students directory"
   puts "9 -> Exit"
 end
 
 def show_students
   print_header
-  print_names($students)
-  print_footer($students)
+  print_names
+  print_footer
+end
+
+def save_students
+  file = File.open("students.csv", "w")
+  $students.each do |student|
+    student_data = [student[:name], student[:age], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
+  puts "\nStudent directory saved to \"students.csv\"\n"
 end
 
 def process_selection(selection)
@@ -79,6 +90,8 @@ def process_selection(selection)
     $students = input_students
   when "2"
     show_students
+  when "3"
+    save_students
   when "9"
     exit
   else
@@ -86,6 +99,7 @@ def process_selection(selection)
   end
 end
 
+# Create interactive menu
 def interactive_menu
   $students = []
   loop do
