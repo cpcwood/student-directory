@@ -31,7 +31,7 @@ end
 def print_names(students)
   i = 0
   while i < students.length
-    puts "#{i + 1}. #{students[i][:name]}, Age: #{students[i][:age]} (#{students[i][:cohort]} cohort)"
+    puts "#{i + 1}. #{(students[i][:name]).center(16)} Age: #{(students[i][:age]).center(4)} (#{students[i][:cohort]} cohort)"
     i += 1
   end
   puts "-------------"
