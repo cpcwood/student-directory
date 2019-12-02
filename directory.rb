@@ -4,19 +4,19 @@ def input_students
   puts "To finish, just hit return twice"
   puts "Please enter first name..."
   students = []
-  name = gets.chomp
+  name = gets.strip
   unless name.empty?
     puts "Please enter age of student"
-    age = gets.chomp
+    age = gets.strip
   end
   while !name.empty? do
     students << {name: name, cohort: :november, age: age}
     puts "Now we have #{students.count} students"
     puts "Please enter next name..."
-    name = gets.chomp
+    name = gets.strip
     unless name.empty?
       puts "Please enter age of student"
-      age = gets.chomp
+      age = gets.strip
     end
   end
   return students
