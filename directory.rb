@@ -3,39 +3,36 @@ def input_students
   puts "Please enter the names and ages and cohorts of the students"
   puts "To finish, just hit return twice"
   students = []
-  possible_cohorts = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  pos_cohort = [['January', 1], ['Febuary', 2], ['March', 3], ['April', 4], ['May', 5], ['June', 6], ['July', 7], ['August', 8], ['September', 9], ['October', 10], ['November', 11], ['December', 12]]
 
   while true
     puts "Please student name"
     name = gets.strip.capitalize
     if !name.empty?
-      # Enter age
+      # Enter additional info
       puts "Please enter age of student"
       age = gets.strip
-      # Enter cohort
       puts "Please enter student cohort"
       cohort = gets.strip.capitalize
       until cohort.empty?
-        if possible_cohorts.any? {|s| s == cohort}
+        if pos_cohort.any? {|s| s[0] == cohort}
           break
         else
           puts "Input incorrect\n Please enter student cohort"
           cohort = gets.strip.capitalize
         end
       end
-
-      # Merge defaults
+      # Merge defaults and ouput number of student
       student = {name: name, age: age, cohort: cohort}
       default = {age: '--', cohort: 'December'}
       students << default.merge(student) {|key, default, student| student.empty? ? default : student}
-
-      # Add to students list
       puts "Now we have #{students.count} students"
     else
       break
     end
   end
-  return students
+  # Sort by cohort and return
+  return students.sort{|a, b| pos_cohort.find{|s| /#{a[:cohort]}/ =~ s[0]}[1] <=> pos_cohort.find{|s| /#{b[:cohort]}/ =~ s[0]}[1]}
 end
 
 # Create print defintions
@@ -46,11 +43,9 @@ end
 
 def print_names(students)
   if students.length > 0
-    i = 0
-    while i < students.length
-      puts "#{i + 1}. #{(students[i][:name]).center(16)} Age: #{(students[i][:age]).center(2)} (#{students[i][:cohort]} cohort)"
-      i += 1
-    end
+    students.each_with_index {|student, index|
+      puts "#{index}. #{(student[:name]).center(16)} Age: #{(student[:age]).center(2)} (#{student[:cohort]} cohort)"
+    }
     puts "-------------"
   end
 end
