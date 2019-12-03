@@ -1,22 +1,23 @@
+require 'csv'
 # Ask user for input
 def input_students
   puts "Please enter the names and ages and cohorts of the students"
   puts "To finish, just hit return twice"
   while true
     puts "Please student name"
-    name = gets.strip.capitalize.gsub(/,/, '')
+    name = STDIN.gets.strip.capitalize.gsub(/,/, '')
     unless name.empty?
       # Enter additional info
       puts "Please enter age of student"
-      age = gets.strip
+      age = STDIN.gets.strip
       puts "Please enter student cohort"
-      cohort = gets.strip.capitalize
+      cohort = STDIN.gets.strip.capitalize
       until cohort.empty?
         if $pos_cohort.any? {|s| s[0] == cohort}
           break
         else
           puts "Input incorrect\n Please enter student cohort"
-          cohort = gets.strip.capitalize
+          cohort = STDIN.gets.strip.capitalize
         end
       end
       # Merge defaults and ouput number of student
@@ -73,27 +74,23 @@ end
 
 def save_students
   puts "Enter filename for directory, if none entered default of 'students' will be used"
-  filename = gets.strip
-  if filename.nil?
-    filename = "students"
+  name = STDIN.gets.strip
+  if name == ""
+    name = "students"
   end
-  file = File.open(filename + ".csv", "w")
-  $students.each do |student|
-    student_data = [student[:name], student[:age], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
-  end
-  file.close
-  puts "Student directory saved\n\n"
+  CSV.open("#{name}.csv", "w", write_headers: true, headers: $students.first.keys) {|csv|
+    $students.each {|student|
+      csv << student.values
+    }
+  }
+  puts "\nStudent directory saved to #{name}.csv\n\n"
 end
 
 def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, age, cohort = line.chomp.split(',')
-    $students << {name: name, cohort: cohort, age: age}
-  end
-  file.close
+  $students = []
+  CSV.foreach(filename, 'r', headers: :first_row, header_converters: :symbol){|row|
+    $students << row.to_h
+  }
   puts "\nLoaded #{$students.count} students from #{filename}\n\n"
 end
 
@@ -102,7 +99,7 @@ def show_databases
   sleep(0.5)
   puts Dir.glob("*.csv")
   puts "\nEnter filename to load from, if none entered default of 'students.csv' will be used"
-  filename = gets.strip
+  filename = STDIN.gets.strip
   filename.empty?? "students.csv" : filename
 end
 
